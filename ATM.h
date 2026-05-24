@@ -2,6 +2,7 @@
 #define ATM_H
 
 #include "Account.h"
+#include <vector>
 
 class ATM {
 private:
@@ -11,9 +12,7 @@ public:
     ATM();
 
     void loadAccounts();
-
     Account* login();
-
     void menu(Account *user);
 };
 

@@ -1,291 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ATM Simulator</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: linear-gradient(135deg, #0f172a, #1e293b);
-    }
-
-    .atm-container {
-      width: 420px;
-      background: white;
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
-
-    .title {
-      text-align: center;
-      font-size: 32px;
-      font-weight: bold;
-      color: #0f172a;
-      margin-bottom: 25px;
-    }
-
-    .input-group {
-      margin-bottom: 15px;
-    }
-
-    .input-group label {
-      display: block;
-      margin-bottom: 6px;
-      color: #334155;
-      font-weight: bold;
-    }
-
-    .input-group input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
-      border: 1px solid #cbd5e1;
-      font-size: 16px;
-    }
-
-    .btn {
-      width: 100%;
-      padding: 14px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 12px;
-      background: #2563eb;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .btn:hover {
-      background: #1d4ed8;
-    }
-
-    .dashboard {
-      display: none;
-    }
-
-    .balance-card {
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: white;
-      padding: 20px;
-      border-radius: 15px;
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .balance-card h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
-    }
-
-    .balance {
-      font-size: 36px;
-      font-weight: bold;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .action-btn {
-      padding: 15px;
-      border: none;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      color: white;
-      transition: 0.3s;
-    }
-
-    .deposit {
-      background: #16a34a;
-    }
-
-    .withdraw {
-      background: #dc2626;
-    }
-
-    .history {
-      background: #7c3aed;
-    }
-
-    .logout {
-      background: #475569;
-    }
-
-    .action-btn:hover {
-      transform: scale(1.03);
-    }
-
-    .history-box {
-      margin-top: 20px;
-      background: #f8fafc;
-      border-radius: 12px;
-      padding: 15px;
-      max-height: 150px;
-      overflow-y: auto;
-    }
-
-    .history-box p {
-      margin-bottom: 10px;
-      color: #334155;
-    }
-
-  </style>
 </head>
+
 <body>
 
-  <div class="atm-container">
+<h2>ATM SYSTEM</h2>
 
-    <!-- LOGIN SECTION -->
-    <div id="loginPage">
-      <div class="title">ATM Simulator</div>
+Account: <input id="account"><br><br>
+PIN: <input id="pin" type="password"><br><br>
+Amount: <input id="amount" type="number"><br><br>
 
-      <div class="input-group">
-        <label>Account Number</label>
-        <input type="text" id="account" placeholder="Enter account number">
-      </div>
+<button onclick="generateFile()">Send to ATM</button>
 
-      <div class="input-group">
-        <label>PIN</label>
-        <input type="password" id="pin" placeholder="Enter PIN">
-      </div>
+<script>
+function generateFile() {
 
-      <button class="btn" onclick="login()">Login</button>
-    </div>
+  let acc = document.getElementById("account").value;
+  let pin = document.getElementById("pin").value;
+  let amt = document.getElementById("amount").value;
 
-    <!-- DASHBOARD -->
-    <div class="dashboard" id="dashboardPage">
+  let data =
+`LOGIN ${acc} ${pin}
+AMOUNT ${amt}`;
 
-      <div class="title">Welcome User</div>
+  let blob = new Blob([data], {type:"text/plain"});
+  let a = document.createElement("a");
 
-      <div class="balance-card">
-        <h2>Current Balance</h2>
-        <div class="balance" id="balance">$5000</div>
-      </div>
+  a.href = URL.createObjectURL(blob);
+  a.download = "request.txt";
+  a.click();
 
-      <div class="input-group">
-        <label>Enter Amount</label>
-        <input type="number" id="amount" placeholder="Enter amount">
-      </div>
-
-      <div class="actions">
-        <button class="action-btn deposit" onclick="depositMoney()">Deposit</button>
-
-        <button class="action-btn withdraw" onclick="withdrawMoney()">Withdraw</button>
-
-        <button class="action-btn history" onclick="showHistory()">History</button>
-
-        <button class="action-btn logout" onclick="logout()">Logout</button>
-      </div>
-
-      <div class="history-box" id="historyBox">
-        <p>Transaction history will appear here.</p>
-      </div>
-
-    </div>
-
-  </div>
-
-  <script>
-
-    let balance = 5000;
-    let history = [];
-
-    function login() {
-
-      const account = document.getElementById('account').value;
-      const pin = document.getElementById('pin').value;
-
-      if(account === '1001' && pin === '1234') {
-
-        document.getElementById('loginPage').style.display = 'none';
-        document.getElementById('dashboardPage').style.display = 'block';
-
-      } else {
-        alert('Invalid Account Number or PIN');
-      }
-    }
-
-    function updateBalance() {
-      document.getElementById('balance').innerText = '$' + balance;
-    }
-
-    function depositMoney() {
-
-      let amount = Number(document.getElementById('amount').value);
-
-      if(amount <= 0) {
-        alert('Enter valid amount');
-        return;
-      }
-
-      balance += amount;
-      history.push('Deposited $' + amount);
-
-      updateBalance();
-
-      alert('Deposit Successful');
-    }
-
-    function withdrawMoney() {
-
-      let amount = Number(document.getElementById('amount').value);
-
-      if(amount > balance) {
-        alert('Insufficient Balance');
-        return;
-      }
-
-      balance -= amount;
-      history.push('Withdrawn $' + amount);
-
-      updateBalance();
-
-      alert('Withdrawal Successful');
-    }
-
-    function showHistory() {
-
-      let box = document.getElementById('historyBox');
-
-      if(history.length === 0) {
-        box.innerHTML = '<p>No transactions yet.</p>';
-        return;
-      }
-
-      box.innerHTML = '';
-
-      history.forEach(item => {
-        box.innerHTML += `<p>${item}</p>`;
-      });
-    }
-
-    function logout() {
-
-      document.getElementById('dashboardPage').style.display = 'none';
-      document.getElementById('loginPage').style.display = 'block';
-
-      alert('Logged Out Successfully');
-    }
-
-  </script>
+  alert("request.txt downloaded. Put it in C++ folder and run program.");
+}
+</script>
 
 </body>
 </html>

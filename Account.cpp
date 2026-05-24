@@ -16,20 +16,15 @@ void Account::deposit(double amount) {
 }
 
 bool Account::withdraw(double amount) {
-    if (amount > balance) {
-        return false;
-    }
+    if (amount > balance) return false;
 
     balance -= amount;
     history.push_back("Withdrawn: " + to_string(amount));
-
     return true;
 }
 
 bool Account::transfer(Account &receiver, double amount) {
-    if (amount > balance) {
-        return false;
-    }
+    if (amount > balance) return false;
 
     balance -= amount;
     receiver.balance += amount;
@@ -41,7 +36,7 @@ bool Account::transfer(Account &receiver, double amount) {
 }
 
 void Account::showBalance() {
-    cout << "\nCurrent Balance: $" << balance << endl;
+    cout << "Balance: $" << balance << endl;
 }
 
 void Account::addHistory(string record) {
@@ -49,11 +44,8 @@ void Account::addHistory(string record) {
 }
 
 void Account::showHistory() {
-    cout << "\nTransaction History:\n";
-
-    for (string record : history) {
-        cout << record << endl;
-    }
+    for (auto &h : history)
+        cout << h << endl;
 }
 
 int Account::getAccountNumber() {
